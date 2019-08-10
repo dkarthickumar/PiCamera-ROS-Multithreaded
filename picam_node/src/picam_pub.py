@@ -250,7 +250,7 @@ class PiVideoStream:
 
 if __name__ == '__main__':
 
-    vs = PiVideoStream(framerate=20, ROS=False, cal=False).start() # start picamera using defaults with ROS node
+    vs = PiVideoStream(framerate=90, ROS=True, cal=False).start() # start picamera using defaults with ROS node
 
     while not rospy.is_shutdown():
         time.sleep(1) ## sleep for 1 second
