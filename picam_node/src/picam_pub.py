@@ -209,8 +209,8 @@ class PiVideoStream:
 
     def start_ros_node(self):
 
-        self.videoRaw = rospy.Publisher('/image', Image, queue_size=1)
-        self.cam_params = rospy.Subscriber("camera_parameters", Parameters, self.set_params)
+        self.videoRaw = rospy.Publisher('~image', Image, queue_size=1)
+        self.cam_params = rospy.Subscriber("~camera_parameters", Parameters, self.set_params)
         str1 = "Camera Initalized"
         str2 = "Camera Frame: %i x %i" % (self.camera.resolution[0], self.camera.resolution[1])
         str3 = "Camera framerate: %i" % (self.camera.framerate)
