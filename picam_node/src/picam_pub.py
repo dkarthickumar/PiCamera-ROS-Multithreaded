@@ -159,8 +159,8 @@ class PiVideoStream:
             self.frame = f.array
 
             # if we init with options act on them
-            if(self.ROS == True):
-                PiVideoStream.pub_image(self)
+            #if(self.ROS == True):
+            #    PiVideoStream.pub_image(self)
 
             if(self.cali == True):
                 PiVideoStream.custom_awb(self)
@@ -228,7 +228,7 @@ class PiVideoStream:
             rospy.logwarn(str0)
 
 
-    def pub_image(self):
+    def pub_image(self,image):
 
         if rospy.is_shutdown():
             str0 = "ROS not initialised"
@@ -242,7 +242,7 @@ class PiVideoStream:
             msg.header.stamp = rospy.Time.now()
 
             # Encode image 
-            msg.data = np.array(cv2.imencode('.jpg', self.frame)[1]).tostring()
+            msg.data = np.array(cv2.imencode('.jpg', image)[1]).tostring()
 
             # Publish new image
             self.videoRaw.publish(msg)
