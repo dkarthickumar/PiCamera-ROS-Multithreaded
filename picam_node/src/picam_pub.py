@@ -87,7 +87,8 @@ class PiVideoStream:
         # ROS
         self.ROS = ROS
         if self.ROS == True and ROS_FLAG:
-            rospy.init_node('PiCamera', anonymous=True)
+	    node_name = os.environ['PI_CAMERA']
+            rospy.init_node(node_name, anonymous=False)
             PiVideoStream.start_ros_node(self)
             if(self.cali):
                 rospy.loginfo("Custom AWB mode being used!")
