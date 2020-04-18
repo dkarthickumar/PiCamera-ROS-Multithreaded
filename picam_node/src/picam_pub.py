@@ -69,7 +69,7 @@ class PiVideoStream:
         
         #self.camera.rotation = 90
         self.camera.vflip = False
-        self.camera.hflip = False
+        self.camera.hflip = True
         self.rawCapture = PiRGBArray(self.camera, size=frame_size)
         self.stream = self.camera.capture_continuous(self.rawCapture, format="bgr", resize=(frame_size), use_video_port=True)
 
