@@ -5,11 +5,13 @@
 import picam_pub as picam
 import cv2
 import sys
+from motor_cmd import motor_ctrl
 
 class object_tracking():
     def __init__(self):
 	self.vs = picam.PiVideoStream(frame_size=(320,240), resolution=(1280, 720), framerate=30, ROS=True).start()
-	self.tracker = cv2.TrackerKCF_create()
+	self.tracker = cv2.TrackerCSRT_create()
+	self.motor = motor_ctrl()
 
     def track_object(self):
 	while True:
@@ -26,7 +28,8 @@ class object_tracking():
                     midy = (int(bbox[1] + (bbox[3]/2)))
 		    errx = (320/2) - midx
 		    erry = (240/2) - midy
-		    print midx, midy, errx, erry  
+		    print errx, erry 
+                    self.motor.motor_cmd(errx,erry)
 
 	    	self.vs.pub_image(frame)
 	    except KeyboardInterrupt:
@@ -42,6 +45,6 @@ class object_tracking():
 	
 if __name__ == '__main__' : 
  	obj_trk = object_tracking()
-	bbox = (107, 100, 40, 66) 
+	bbox = (186, 66, 14, 33) 
 	obj_trk.init_tracker(bbox)
 	obj_trk.track_object()		
