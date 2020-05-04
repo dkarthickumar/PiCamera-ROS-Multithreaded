@@ -10,6 +10,8 @@ from motor_cmd import motor_ctrl
 class object_tracking():
     def __init__(self):
 	self.vs = picam.PiVideoStream(frame_size=(320,240), resolution=(1280, 720), framerate=30, ROS=True).start()
+	self.motor = motor_ctrl()
+
 
     def track_object(self,low_color, high_color):
 	while True:
@@ -30,8 +32,9 @@ class object_tracking():
 
 		    errx = (320/2) - midx
 		    erry = (240/2) - midy
-		    if errx < 40 and erry < 40:	
+		    if errx < 80:	
 			print errx, erry 
+			self.motor.motor_cmd(errx,erry)
 
 	    	self.vs.pub_image(frame)
 	    except KeyboardInterrupt:
@@ -41,6 +44,6 @@ class object_tracking():
 
 if __name__ == '__main__' : 
  	obj_trk = object_tracking()
-	pink_lower = (92, 89, 6)
-	pink_higher = (140, 255, 255)
+	pink_lower = (82, 89, 6)
+	pink_higher = (150, 255, 255)
 	obj_trk.track_object(pink_lower, pink_higher)		
