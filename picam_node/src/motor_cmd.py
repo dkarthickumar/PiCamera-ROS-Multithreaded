@@ -12,7 +12,14 @@ class motor_ctrl:
 	    start_byte = 'r'
     
         cmd = struct.pack('cbb', start_byte, angle_r_l, angle_u_d) 
-        self.port.write(cmd)   
+        self.port.write(cmd)
+	ret = self.port.read_until(size=1)   
+	if ret == '':
+	    print('timed out')
+	if ret == 'N':
+	    print('Nak')
+	if ret == 'A':
+	    print('Aak')
  
     def __init__(self):
         self.port = serial.Serial("/dev/ttyUSB0",baudrate=115200, timeout=3.0)
