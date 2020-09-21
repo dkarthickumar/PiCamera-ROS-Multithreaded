@@ -8,7 +8,7 @@ class motor_ctrl:
     #
     # controls the motro based on the rasp pi 
     #
-    def motor_cmd(self, angle_r_l, angle_u_d):
+    def motor_cmd(self, angle):
 
     	camera = os.environ["PI_CAMERA"]
 	if (camera == "camera_left"):
@@ -16,7 +16,7 @@ class motor_ctrl:
        	elif (camera == "camera_right"):
 	    start_byte = 'r'
     
-        cmd = struct.pack('cbb', start_byte, angle_r_l, angle_u_d) 
+        cmd = struct.pack('ch', start_byte, angle) 
         self.port.write(cmd)
 	ret = self.port.read_until(size=1)   
 	if ret == '':
@@ -27,7 +27,7 @@ class motor_ctrl:
 	    print('Aak')
 
     def motor_stop(self):
-        cmd = struct.pack('cbb', 's', 0, 0) 
+        cmd = struct.pack('ch', 's', 0) 
         self.port.write(cmd)
 	ret = self.port.read_until(size=1)   
 	if ret == '':
@@ -38,7 +38,7 @@ class motor_ctrl:
 	    print('Aak')
 	
 
-    def motor_cmd_all(self,camera, angle_r_l, angle_u_d):
+    def motor_cmd_all(self,camera, angle):
 
 	if (camera == "camera_left"):
        	    start_byte = 'l'
@@ -49,7 +49,7 @@ class motor_ctrl:
 	if (camera == "camera_stop"):
        	    start_byte = 's'
     
-        cmd = struct.pack('cbb', start_byte, angle_r_l, angle_u_d) 
+        cmd = struct.pack('ch', start_byte, angle) 
         self.port.write(cmd)
 	ret = self.port.read_until(size=1)   
 	if ret == '':
@@ -61,7 +61,7 @@ class motor_ctrl:
 
 
     def get_motor_angles(self):
-	cmd = struct.pack('cbb', 'a', 0 ,0)
+	cmd = struct.pack('ch', 'a', 0)
 	self.port.write(cmd)
 	if ret == '':
 	    print('timed out')
