@@ -23,7 +23,6 @@ class motion_detection():
 
 	        # Find the index of the largest contour
 	        areas = [cv2.contourArea(c) for c in contours]
-	       	print areas  
 		if not areas:
 		    continue   	
 		max_index = np.argmax(areas)
