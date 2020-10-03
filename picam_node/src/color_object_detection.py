@@ -38,5 +38,5 @@ if __name__ == '__main__' :
 	img = clr_obj_dect.vs.read()
 	roi = img[120:130,130:140]
 	roi_hsv = cv2.cvtColor(roi,cv2.COLOR_BGR2HSV)
-	roi_hist = cv2.calcHist([hsv_roi], [0, 1], None, [180, 256], [0, 180, 0, 256])
+	roi_hist = cv2.calcHist([roi_hsv], [0, 1], None, [180, 256], [0, 180, 0, 256])
 	clr_obj_dect.detect_object(roi_hist)		
