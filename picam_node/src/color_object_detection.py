@@ -7,19 +7,19 @@ import cv2
 import sys
 from motor_cmd import motor_ctrl
 
-class object_tracking():
+class color_object_detection():
     def __init__(self):
 	self.vs = picam.PiVideoStream(frame_size=(320,240), resolution=(1280, 720), framerate=30, ROS=True).start()
 	self.motor = motor_ctrl()
 
 
-    def track_object(self,low_color, high_color):
+    def detect_object(self,roi_hist):
 	while True:
 	    try:
 	    	frame = self.vs.read()
 		hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 		
-		mask = cv2.inRange(hsv, low_color, high_color)
+		mask = cv2.calcBackProject([hsv],[0,1],roi_hist,[0,180,0,256],1)
  		(_,cnts, _) = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 		for c in cnts:
 		    if cv2.contourArea(c) < 20:
@@ -27,15 +27,6 @@ class object_tracking():
 		    (x,y,w,h) = cv2.boundingRect(c)
 		    cv2.rectangle(frame, (x,y), (x+w, y+h), (0,255,0),2)
 		    
-		    midx = x + (w/2)
-		    midy = y + (h/2)
-
-		    errx = (320/2) - midx
-		    erry = (240/2) - midy
-		    if errx < 80:	
-			print errx, erry 
-			self.motor.motor_cmd(errx,erry)
-
 	    	self.vs.pub_image(frame)
 	    except KeyboardInterrupt:
     		print('interrupted!')
@@ -43,7 +34,9 @@ class object_tracking():
 		sys.exit() 
 
 if __name__ == '__main__' : 
- 	obj_trk = object_tracking()
-	pink_lower = (82, 89, 6)
-	pink_higher = (150, 255, 255)
-	obj_trk.track_object(pink_lower, pink_higher)		
+ 	clr_obj_dect = color_object_detection()
+	img = clr_obj_dect.vs.read()
+	roi = img[120:130,130:140]
+	roi_hsv = cvtColor(roi,cv2.COLOR_BGR2HSV)
+	roi_hist = cv2.calcHist([hsv_roi], [0, 1], None, [180, 256], [0, 180, 0, 256])
+	clr_obj_dect.detect_object(roi_hist)		
