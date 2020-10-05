@@ -12,9 +12,9 @@ import numpy as np
 
 class color_object_detection():
     def __init__(self):
-        #self.vs = picam.PiVideoStream(frame_size=(320, 240), resolution=(1280, 720), framerate=30, ROS=True).start()
-        #self.motor = motor_ctrl()
-	pass
+        self.vs = picam.PiVideoStream(frame_size=(320, 240), resolution=(1280, 720), framerate=30, ROS=True).start()
+        self.motor = motor_ctrl()
+	#pass
 
     def detect_object(self):
         while True:
@@ -43,7 +43,7 @@ class color_object_detection():
 	print(hist)
 if __name__ == '__main__':
     clr_obj_dect = color_object_detection()
-    rospy.init_node('color_object_detect')
+    #rospy.init_node('color_object_detect')
     rospy.Subscriber('roi_hist_pub',Float32MultiArray , clr_obj_dect.get_hist_data)
     print('subcribed') 
     rospy.spin()
