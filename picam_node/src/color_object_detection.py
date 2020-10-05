@@ -7,13 +7,14 @@ import cv2
 import sys
 from motor_cmd import motor_ctrl
 import rospy
-from rospy.numpy_msg import numpy_msg
-from rospy_tutorials.msg import Floats
+from std_msgs.msg import Float32MultiArray, MultiArrayDimension
+import numpy as np 
 
 class color_object_detection():
     def __init__(self):
-        self.vs = picam.PiVideoStream(frame_size=(320, 240), resolution=(1280, 720), framerate=30, ROS=True).start()
-        self.motor = motor_ctrl()
+        #self.vs = picam.PiVideoStream(frame_size=(320, 240), resolution=(1280, 720), framerate=30, ROS=True).start()
+        #self.motor = motor_ctrl()
+	pass
 
     def detect_object(self):
         while True:
@@ -36,12 +37,16 @@ class color_object_detection():
                 sys.exit()
 
     def get_hist_data(self,data):
-        print(data)
-
+        print('callback called')
+	#print(data.data) 
+	hist = np.asarray(data.data, 'float32').reshape(180,256)
+	print(hist)
 if __name__ == '__main__':
     clr_obj_dect = color_object_detection()
     rospy.init_node('color_object_detect')
-    rospy.Subscriber('roi_hist_pub', numpy_msg(Floats), clr_obj_dect.get_hist_data)
+    rospy.Subscriber('roi_hist_pub',Float32MultiArray , clr_obj_dect.get_hist_data)
+    print('subcribed') 
+    rospy.spin()
     # img = clr_obj_dect.vs.read()
     # roi = img[120:130, 130:140]
     # roi_hsv = cv2.cvtColor(roi, cv2.COLOR_BGR2HSV)
