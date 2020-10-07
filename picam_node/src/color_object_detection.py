@@ -19,6 +19,7 @@ class color_object_detection():
         self.hist_ready = False
         self.hist = []
         self.term_crit = (cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, 10, 1)
+	self.track_window = (100,200,100,100)
 
     def detect_object(self):
         while True:
@@ -27,8 +28,7 @@ class color_object_detection():
                 hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
                 if self.hist_ready:
                     mask = cv2.calcBackProject([hsv], [0, 1], self.hist, [0, 180, 0, 256], 1)
-                    (_, cnts, _) = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-                    ret, track_window = cv2.CamShift(dst, track_window, term_crit)
+                    ret, track_window = cv2.CamShift(mask, self.track_window, self.term_crit)
                     pts = cv2.boxPoints(ret)
                     pts = np.int0(pts)
                     frame = cv2.polylines(frame,[pts],True,255,2)
